@@ -1,0 +1,67 @@
+version: '3.9'
+
+services:
+    dev:
+        image: nestjs-api-dev:1.0.0
+        build:
+            context: .
+            target: development
+            dockerfile: ./Dockerfile
+        command: npm run start:debug
+        depends_on:
+            - db
+            - redis
+        ports:
+            - ${PORT}:3000
+            - 9229:9229
+        networks:
+            - x_network
+        environment:
+            MYSQL_HOST: "mysql"
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        restart: unless-stopped
+    prod:
+        image: nestjs-api-prod:1.0.0
+        build:
+            context: .
+            target: production
+            dockerfile: ./Dockerfile
+        command: npm run start:prod
+        depends_on:
+            - db
+            - redis
+        ports:
+            - ${PORT}:3000
+        networks:
+            - x_network
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        restart: unless-stopped
+    db:
+        image: 'arm64v8/mysql:oracle'
+        hostname: db
+        ports:
+            - 3306:3306
+        environment:
+            - ALLOW_EMPTY_PASSWORD=yes
+            - MYSQL_ROOT_PASSWORD=S3cr3T
+            - MYSQL_USER=${DB_USER}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
+            - MYSQL_DATABASE=${DB_NAME}
+            - MARIADB_CHARACTER_SET=utf8mb4
+            - MARIADB_COLLATE=utf8mb4_unicode_ci
+        networks:
+            - x_network
+    redis:
+        image: redis:alpine
+        hostname: redis
+        ports:
+            - "6379:6379"
+        networks:
+            - x_network
+networks:
+    x_network:
+      driver: bridge

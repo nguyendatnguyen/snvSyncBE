@@ -1,0 +1,18 @@
+{
+  "type": "mysql",
+  "host": "db",
+  "port": 3306,
+  "username": "dbuser",
+  "password": "Abc123456",
+  "database": "DBProject",
+  "entities": [
+    "dist/**/*.entity{.ts,.js}"
+  ],
+  "migrations": [
+    "dist/migrations/*{.ts,.js}"
+  ],
+  "cli": {
+    "migrationsDir": "src/migrations"
+  },
+  "synchronize": false
+}

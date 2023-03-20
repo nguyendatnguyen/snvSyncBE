@@ -52,7 +52,9 @@ $ docker-compose exec dev npm run migrate:up
 ## Running the app with Docker (production)
 
 ```bash
-$ cp .env.example .env
+% Creat file .env and coppy data from .env.example
+$ cp .env.example .env  
+<!-- Creat container prod BE and run API on port 3000 -->
 $ docker-compose up -d --build -V prod
 $ docker-compose exec prod npm run migrate:up
 ```
